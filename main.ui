@@ -151,7 +151,7 @@
              </property>
              <property name="font">
               <font>
-               <pointsize>13</pointsize>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="title">
@@ -340,6 +340,13 @@
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_18">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Stream Base Settings</string>
              </property>
@@ -347,6 +354,13 @@
            </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_19">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Stream Rover Settings</string>
              </property>
@@ -354,6 +368,13 @@
            </item>
            <item row="0" column="2">
             <widget class="QLabel" name="label_20">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Result FileName Settings</string>
              </property>
@@ -403,20 +424,41 @@
            </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_10">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>STREAM Rover Result</string>
+              <string>Stream Rover Result</string>
              </property>
             </widget>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_9">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>STREAM Base Result</string>
+              <string>Stream Base Result</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_11">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Compare Result</string>
              </property>

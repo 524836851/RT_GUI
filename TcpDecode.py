@@ -163,7 +163,10 @@ class TCP_Data(QObject):
                     self.compare_add([sow,xyz,mode])
                     self.app_add([sow,xyz])
                 except ConnectionError as e:
-                    # TODO : process error
+                    self.ui.logView.write_data(str(e))
+                    break
+                except OSError as e:
+                    self.ui.logView.write_data(str(e))
                     break
 
     def close_data(self):

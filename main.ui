@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>940</width>
-    <height>826</height>
+    <width>849</width>
+    <height>784</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,6 +25,48 @@
         <string>Main</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
+        <item row="1" column="0">
+         <widget class="QWidget" name="widget_3" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>200</height>
+           </size>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Compare Result</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTextBrowser" name="textBrowser_2"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QTextBrowser" name="textBrowser"/>
+           </item>
+           <item row="1" column="2">
+            <widget class="QTextBrowser" name="textBrowser_3"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>STREAM Rover Result</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>STREAM Base Result</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QWidget" name="widget" native="true">
           <property name="maximumSize">
@@ -34,6 +76,98 @@
            </size>
           </property>
           <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="1">
+            <widget class="QGroupBox" name="groupBox">
+             <property name="minimumSize">
+              <size>
+               <width>250</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>STREAM Rover</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <widget class="QTabWidget" name="tabWidget_3">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="tab_9">
+                 <attribute name="title">
+                  <string>Dynamic</string>
+                 </attribute>
+                 <layout class="QFormLayout" name="formLayout_2">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>IP</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLineEdit" name="lineEdit_6">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>localhost</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>PORT</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLineEdit" name="lineEdit_5">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>12346</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="2">
+                   <widget class="QPushButton" name="pushButton_3">
+                    <property name="text">
+                     <string>Connect</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <widget class="QPushButton" name="pushButton_5">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Stop</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QGroupBox" name="groupBox_2">
              <property name="minimumSize">
@@ -170,14 +304,8 @@
              </layout>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QGroupBox" name="groupBox">
-             <property name="minimumSize">
-              <size>
-               <width>250</width>
-               <height>0</height>
-              </size>
-             </property>
+           <item row="0" column="2">
+            <widget class="QGroupBox" name="groupBox_3">
              <property name="maximumSize">
               <size>
                <width>300</width>
@@ -185,137 +313,73 @@
               </size>
              </property>
              <property name="title">
-              <string>STREAM Rover</string>
+              <string>Result Save</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_3">
+             <layout class="QGridLayout" name="gridLayout_5">
               <item row="0" column="0">
-               <widget class="QTabWidget" name="tabWidget_3">
-                <property name="currentIndex">
-                 <number>0</number>
+               <widget class="QLabel" name="label_15">
+                <property name="text">
+                 <string>Base Result</string>
                 </property>
-                <widget class="QWidget" name="tab_9">
-                 <attribute name="title">
-                  <string>Dynamic</string>
-                 </attribute>
-                 <layout class="QFormLayout" name="formLayout_2">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_7">
-                    <property name="text">
-                     <string>IP</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_6">
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>localhost</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_4">
-                    <property name="text">
-                     <string>PORT</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLineEdit" name="lineEdit_5">
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>12346</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0" colspan="2">
-                   <widget class="QPushButton" name="pushButton_3">
-                    <property name="text">
-                     <string>Connect</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0" colspan="2">
-                   <widget class="QPushButton" name="pushButton_5">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="text">
-                     <string>Stop</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_base">
+                <property name="text">
+                 <string>Base</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>Rover Result</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineEdit_rover">
+                <property name="text">
+                 <string>Rover</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string>Compare Result</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="lineEdit_compare">
+                <property name="text">
+                 <string>Compare</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="2">
+               <widget class="QPushButton" name="pushButton_6">
+                <property name="text">
+                 <string>SAVE</string>
+                </property>
                </widget>
               </item>
              </layout>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item row="0" column="3">
             <spacer name="horizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>661</width>
-               <height>51</height>
+               <width>0</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QWidget" name="widget_3" native="true">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>200</height>
-           </size>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>Compare Result</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QTextBrowser" name="textBrowser_2"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QTextBrowser" name="textBrowser"/>
-           </item>
-           <item row="1" column="2">
-            <widget class="QTextBrowser" name="textBrowser_3"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>STREAM Rover Result</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_9">
-             <property name="text">
-              <string>STREAM Base Result</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>
@@ -325,7 +389,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>350</height>
+            <height>300</height>
            </size>
           </property>
           <property name="currentIndex">

@@ -53,6 +53,7 @@ class Ui_MainWindow(object):
         self.widget.setMaximumSize(QtCore.QSize(16777215, 210))
         self.widget.setObjectName("widget")
         self.gridLayout_7 = QtWidgets.QGridLayout(self.widget)
+        self.gridLayout_7.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.groupBox = QtWidgets.QGroupBox(self.widget)
         self.groupBox.setMinimumSize(QtCore.QSize(250, 0))

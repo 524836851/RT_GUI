@@ -34,7 +34,9 @@ class MyMain(QMainWindow):
     def start_web(self):
         self.ui.logView.write_data("Web Server Start...")
         web_log = open("web.log","w")
-        self.app_run = sub.Popen("python WebMain.py",stdout=web_log,stderr=web_log)
+        self.app_run = threading.Thread(target=app.run)
+        self.app_run.start()
+        #self.app_run = sub.Popen("python WebMain.py",stdout=web_log,stderr=web_log)
 
     def init_UI(self):
         self.ui = Ui_main.Ui_MainWindow()

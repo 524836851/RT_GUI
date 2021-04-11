@@ -1,0 +1,41 @@
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+    Monitor Web Page
+    </title>
+    <meta name="theme-color" content="#563d7c">
+    
+    <style>
+  /* Always set the map height explicitly to define the size of the div
+  * element that contains the map. */
+  #map {
+    height: 100%;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+  </head>
+
+<body>
+    <div id="map" style="clear: both;"></div>
+<script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLaXgRYs8b7vNrPeQyku50o8Mbmkwa4BE&callback=initMap" async defer></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/prototype/1.7.3/prototype.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="{{url_for('static',filename='JS/draw.js')}}"></script>
+<script type="text/javascript" type="text/javascript">
+  AJAX_request("{{url_for('get_great_data')}}",rtk_complete_func,alert_func);
+  AJAX_request("{{url_for('get_rtppp_data')}}",rtppp_complete_func,alert_func);
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ from utils import get_diff_data,blh2xyz,xyz2blh,get_diff
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl
+from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl,QMargins
 from PyQt5.QtCore import QDateTime,Qt,QTimer
 from PyQt5.QtChart import QChart,QChartView,QValueAxis,QLineSeries,QScatterSeries
 from PyQt5.QtWebEngineWidgets import *
@@ -51,16 +51,20 @@ class MyMain(QMainWindow):
         self.gridLayout_web.setObjectName("gridLayout_web")
         self.ui.webView = QWebEngineView(self.ui.widget_map)
         self.gridLayout_web.addWidget(self.ui.webView,0,0,1,1)
+        self.gridLayout_web.setContentsMargins(QMargins(0,0,0,0))
         self.ui.webView.setUrl(QUrl('http://127.0.0.1:5000/'))
 
         # Log View
-        self.ui.logView = LogWidget(self.ui.tab)
+        self.ui.logView = LogWidget(self.ui.centralwidget)
+        self.ui.gridLayout_3.addWidget(self.ui.logView, 1, 0, 1, 1)
 
     def add_Chart(self,name,parent_view,s_key,button,checkbox):
         self.gridLayout_chart = QtWidgets.QGridLayout(parent_view)
         #self.gridLayout_chart.setObjectName("gridLayout_chart")
         self.ui.charView[name] = ChartView(parent_view,s_key=s_key)
         self.gridLayout_chart.addWidget(self.ui.charView[name],0,0,1,1)
+        self.gridLayout_chart.setContentsMargins(QMargins(0,0,0,0))
+        self.gridLayout_chart.setVerticalSpacing(0)
         self.ui.charView[name].set_button(button,checkbox)
 
        

@@ -32,7 +32,7 @@ class ChartView(QChartView,QChart):
         self.set_yaxis_range()
 
     def set_yaxis_range(self):
-        max_v = int(self.comboBox.currentText())
+        max_v = float(self.comboBox.currentText())
         min_v = -max_v
         fromzero = self.checkbox.isChecked()
         if fromzero:
@@ -69,7 +69,7 @@ class ChartView(QChartView,QChart):
         self.y_Aix = QValueAxis()#定义y轴
         #self.y_Aix.setRange(-50,50)
         self.y_Aix.setLabelFormat("%0.1f")
-        self.y_Aix.setTickCount(6)
+        #self.y_Aix.setTickCount(6)
         self.y_Aix.setMinorTickCount(0)
 
         self.chart.addAxis(self.x_Aix,Qt.AlignBottom)

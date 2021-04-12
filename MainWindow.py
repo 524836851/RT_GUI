@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import QMainWindow,QFileDialog
 from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl,QMargins
 from PyQt5.QtCore import QDateTime,Qt,QTimer
 from PyQt5.QtChart import QChart,QChartView,QValueAxis,QLineSeries,QScatterSeries
-from PyQt5.QtWebEngineWidgets import *
+#from PyQt5.QtWebEngineWidgets import QWebEngineView
 import Ui_main
 from ChartView import ChartView
 from TcpDecode import compare,TCP_Data
@@ -30,30 +30,29 @@ class MyMain(QMainWindow):
         super().__init__()
         self.init_UI()
         self.set_connect()
-        self.start_web()
+        #self.start_web()
        
     def start_web(self):
         self.ui.logView.write_data("Web Server Start...")
         web_log = open("web.log","w")
         self.app_run = threading.Thread(target=app.run)
         self.app_run.start()
-        #self.app_run = sub.Popen("python WebMain.py",stdout=web_log,stderr=web_log)
 
     def init_UI(self):
         self.ui = Ui_main.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.charView={}
-        self.add_Chart("enu_chart",self.ui.widget_4,["E","N","U"],self.ui.comboBox_2,self.ui.checkBox)
+        self.add_Chart("enu_chart",self.ui.widget_4,["E","N","U","float_E","float_N","float_U"],self.ui.comboBox_2,self.ui.checkBox)
         self.add_Chart("SatNum",self.ui.widget_6,["SatNum"],self.ui.comboBox_3,self.ui.checkBox_2)
         self.add_Chart("PDOP",self.ui.widget_7,["PDOP"],self.ui.comboBox,self.ui.checkBox_3)
         self.add_Chart("Ratio",self.ui.widget_8,["Ratio"],self.ui.comboBox_4,self.ui.checkBox_4)
         # Web View
-        self.gridLayout_web = QtWidgets.QGridLayout(self.ui.widget_map)
-        self.gridLayout_web.setObjectName("gridLayout_web")
-        self.ui.webView = QWebEngineView(self.ui.widget_map)
-        self.gridLayout_web.addWidget(self.ui.webView,0,0,1,1)
-        self.gridLayout_web.setContentsMargins(QMargins(0,0,0,0))
-        self.ui.webView.setUrl(QUrl('http://127.0.0.1:5000/'))
+        #self.gridLayout_web = QtWidgets.QGridLayout(self.ui.widget_map)
+        #self.gridLayout_web.setObjectName("gridLayout_web")
+        #self.ui.webView = QWebEngineView(self.ui.widget_map)
+        #self.gridLayout_web.addWidget(self.ui.webView,0,0,1,1)
+        #self.gridLayout_web.setContentsMargins(QMargins(0,0,0,0))
+        #self.ui.webView.setUrl(QUrl('http://127.0.0.1:5000/'))
 
         # Log View
         self.ui.logView = LogWidget(self.ui.centralwidget)
@@ -75,15 +74,17 @@ class MyMain(QMainWindow):
         self.tcpdata1.write_temp.close()
         self.tcpdata2.write_temp.close()
         self.comp.write_temp.close()
-        self.app_run.kill()
+        #self.app_run.kill()
         self.close()
 
     def streambase_change(self):
         if self.ui.tabWidget_2.currentIndex() == 0:
             self.comp.set_static(False)
+            self.ui.logView.write_data("Stream Base Using Dynamic Stream!")
         else:
             self.tcpdata1.close_data()
             self.comp.set_static(True)
+            self.ui.logView.write_data("Stream Base Using Static Crd!")
 
     def set_write_temp(self):
         try:
@@ -102,6 +103,7 @@ class MyMain(QMainWindow):
         if dir_choose=="":
             return
         self.ui.lineEdit_select.setText(dir_choose)
+        self.ui.logView.write_data(f"Set Save Diretory: {dir_choose}")
 
     def set_connect(self):
         self.comp = compare(self.ui,self.ui.textBrowser_3,self.ui.charView)

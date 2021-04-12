@@ -7,7 +7,8 @@ import threading
 import sys
 from functools import partial
 from utils import get_diff_data,blh2xyz,xyz2blh,get_diff,sow2hms,sow2datetime
-from PyQt5.QtGui import QPainter,QBrush,QColor
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPainter,QBrush,QColor,QPen
 from PyQt5.QtWidgets import QMainWindow,QPushButton,QComboBox
 from PyQt5.QtCore import QObject,pyqtSignal,QPointF
 from PyQt5.QtCore import QDateTime,Qt,QTimer
@@ -68,7 +69,7 @@ class ChartView(QChartView,QChart):
 
         self.y_Aix = QValueAxis()#定义y轴
         #self.y_Aix.setRange(-50,50)
-        self.y_Aix.setLabelFormat("%0.1f")
+        self.y_Aix.setLabelFormat("%0.2f")
         #self.y_Aix.setTickCount(6)
         self.y_Aix.setMinorTickCount(0)
 
@@ -77,12 +78,13 @@ class ChartView(QChartView,QChart):
 
         self.s_key = s_key
         self.series_list={}
-        color_list = ["blue","green","red"]
+        color_list = [QColor("blue"),QColor("green"),QColor("red"),QColor(152,245,255),QColor(84,255,159),QColor(255,193,193)]
         for k,c in zip(self.s_key,color_list):
             self.q_point[k] = queue.Queue()
             self.series_list[k] = QScatterSeries()
             self.series_list[k].setMarkerSize(9.0)
             self.series_list[k].setColor(QColor(c))
+            self.series_list[k].setPen(QPen(QtCore.Qt.PenStyle.NoPen))
             self.chart.addSeries(self.series_list[k])
             self.series_list[k].setName(k)
             self.series_list[k].attachAxis(self.x_Aix)

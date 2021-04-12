@@ -67,10 +67,12 @@ class compare(QObject):
         diff_data = {"sow":self.Q_now[0][0],"E":float(enuDiff[0]),"N":float(enuDiff[1]),"U":float(enuDiff[2]),"UTC":sow2hms(self.Q_now[0][0])}
         if self.Q_now[0][2]=="Fixed":
             # add chart
-            for k in self.charView["enu_chart"].s_key:
+            for k in self.charView["enu_chart"].s_key[:3]:
                 self.charView["enu_chart"].add_data(k,(diff_data["sow"],diff_data[k]))
         else:
-            self.ui.logView.write_data(f"Epoch: {diff_data['UTC']} base rover is float! Rmove...")
+            #self.ui.logView.write_data(f"Epoch: {diff_data['UTC']} base rover is float! Rmove...")
+            for k in self.charView["enu_chart"].s_key[3:]:
+                self.charView["enu_chart"].add_data(k,(diff_data["sow"],diff_data[k[-1]]))
         # add textBrowswer
         str_diffdata = f"{diff_data['UTC']} E:{diff_data['E']:.2f} N:{diff_data['N']:.2f} U:{diff_data['U']:.2f}"
         self.textBrowser.append(str_diffdata)
@@ -145,7 +147,7 @@ class TCP_Data(QObject):
         if self.show_otherinfo:
             self.ui.charView["SatNum"].add_data("SatNum",(sow,satNum))
             self.ui.charView["PDOP"].add_data("PDOP",(sow,pdop))
-            self.ui.charView["Ratio"].add_data("Ratio",(sow,satNum))
+            self.ui.charView["Ratio"].add_data("Ratio",(sow,ratio))
 
     def get_data(self):
         if not self.static:
@@ -168,6 +170,7 @@ class TCP_Data(QObject):
                 except OSError as e:
                     self.ui.logView.write_data(str(e))
                     break
+            self.close_data()
 
     def close_data(self):
         try:

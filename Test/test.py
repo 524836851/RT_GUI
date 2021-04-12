@@ -1,8 +1,9 @@
 import sys
 import random
-from PyQt5.QtChart import QDateTimeAxis,QValueAxis,QSplineSeries,QChart,QChartView
+from PyQt5 import QtCore
+from PyQt5.QtChart import QDateTimeAxis,QValueAxis,QSplineSeries,QChart,QChartView,QScatterSeries
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter,QColor,QPen
 from PyQt5.QtCore import QDateTime,Qt,QTimer
 
 
@@ -17,12 +18,15 @@ class ChartView(QChartView,QChart):
         #使用QTimer，2秒触发一次，更新数据
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.drawLine)
-        self.timer.start(500)
+        self.timer.start(100)
     def chart_init(self):
         self.chart = QChart()
-        self.series = QSplineSeries()
+        self.series = QScatterSeries()
         #设置曲线名称
         self.series.setName("实时数据")
+        self.series.setColor(QColor(255,0,0))
+        self.series.setMarkerSize(20.0)
+        self.series.setPen(QPen(QtCore.Qt.PenStyle.NoPen))
         #把曲线添加到QChart的实例中
         self.chart.addSeries(self.series)
         #声明并初始化X轴，Y轴

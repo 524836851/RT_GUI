@@ -27,14 +27,14 @@ class compare(QObject):
         self.Q = [queue.Queue(),queue.Queue()]
         self.Q_now=[None,None]
         self.static = False;
-        self.set_write_temp()
     
     def set_write_temp(self):
         now_t=datetime.datetime.utcnow()
-        if not os.path.exists("./log"):
-            os.makedirs("./log")
+        save_dir = self.ui.lineEdit_select.text()
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
         name = self.ui.lineEdit_compare.text()
-        tempfile_name = f"./log/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}_{now_t.minute}.log"
+        tempfile_name = f"{save_dir}/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}_{now_t.minute}.log"
         self.write_temp = open(tempfile_name,"w")
 
     def set_static(self,b):
@@ -94,12 +94,12 @@ class TCP_Data(QObject):
         self.sock = sk.socket(sk.AF_INET,sk.SOCK_STREAM)
         self.static = False
 
-    def set_write_temp(self,name):
+    def set_write_temp(self,name,dir_name="./log"):
         self.close_data()
-        if not os.path.exists("./log"):
-            os.makedirs("./log")
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
         now_t = datetime.datetime.utcnow()
-        tempflie_name = f"./log/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}_{now_t.minute}.log"
+        tempflie_name = f"{dir_name}/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}_{now_t.minute}.log"
         self.write_temp = open(tempflie_name,"w")
         
     def start_connect(self):

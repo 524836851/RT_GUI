@@ -1,5 +1,6 @@
 #-*- coding:utf-8 -*-
 
+import os
 import queue
 import socket as sk
 import time
@@ -11,7 +12,7 @@ from functools import partial
 from utils import get_diff_data,blh2xyz,xyz2blh,get_diff
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow,QFileDialog
 from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl,QMargins
 from PyQt5.QtCore import QDateTime,Qt,QTimer
 from PyQt5.QtChart import QChart,QChartView,QValueAxis,QLineSeries,QScatterSeries
@@ -84,24 +85,40 @@ class MyMain(QMainWindow):
             self.tcpdata1.close_data()
             self.comp.set_static(True)
 
-    def set_write_temp(self,obj,line_obj):
-        obj.set_write_temp(line_obj.text())
+    def set_write_temp(self):
+        try:
+            self.comp.set_write_temp()
+            self.tcpdata1.set_write_temp(self.ui.lineEdit_base.text(),self.ui.lineEdit_select.text())
+            self.tcpdata2.set_write_temp(self.ui.lineEdit_rover.text(),self.ui.lineEdit_select.text())
+        except OSError as e:
+            self.ui.logView.write_data(str(e))
+            self.ui.logView.write_data("Settings write_temp Fail!")
+            return
+        self.ui.logView.write_data('Settings Write_temp Success')
+
+    def btn_choose_dir(self):
+        cwd = os.getcwd()
+        dir_choose =  QFileDialog.getExistingDirectory(self,"Select",cwd)
+        if dir_choose=="":
+            return
+        self.ui.lineEdit_select.setText(dir_choose)
 
     def set_connect(self):
         self.comp = compare(self.ui,self.ui.textBrowser_3,self.ui.charView)
         self.tcpdata1 = TCP_Data(self.ui,[self.ui.lineEdit,self.ui.lineEdit_2,self.ui.textBrowser,self.ui.pushButton_4,self.ui.pushButton],partial(self.comp.add_data,0),partial(app_add,0))
         self.tcpdata2 = TCP_Data(self.ui,[self.ui.lineEdit_6,self.ui.lineEdit_5,self.ui.textBrowser_2,self.ui.pushButton_5,self.ui.pushButton_3],partial(self.comp.add_data,1),partial(app_add,1),show_otherinfo=True)
-        self.tcpdata1.set_write_temp(self.ui.lineEdit_base.text())
-        self.tcpdata2.set_write_temp(self.ui.lineEdit_rover.text())
+        self.ui.lineEdit_select.setText(os.getcwd()+"/log")
+        self.set_write_temp()
+        #self.tcpdata1.set_write_temp(self.ui.lineEdit_base.text())
+        #self.tcpdata2.set_write_temp(self.ui.lineEdit_rover.text())
         self.ui.pushButton.clicked.connect(self.tcpdata1.start_connect)
         self.ui.pushButton.clicked.connect(self.streambase_change)
         self.ui.pushButton_4.clicked.connect(self.tcpdata1.close_data)
         self.ui.pushButton_3.clicked.connect(self.tcpdata2.start_connect)
         self.ui.pushButton_5.clicked.connect(self.tcpdata2.close_data)
         self.ui.pushButton_static.clicked.connect(self.streambase_change)
-        self.ui.pushButton_6.clicked.connect(self.comp.set_write_temp)
-        self.ui.pushButton_6.clicked.connect(partial(self.set_write_temp,self.tcpdata1,self.ui.lineEdit_base))
-        self.ui.pushButton_6.clicked.connect(partial(self.set_write_temp,self.tcpdata2,self.ui.lineEdit_rover))
+        self.ui.pushButton_6.clicked.connect(self.set_write_temp)
+        self.ui.pushButton_select.clicked.connect(self.btn_choose_dir)
         self.tcpdata1.data_received.connect(self.tcpdata1.show_data)
         self.tcpdata2.data_received.connect(self.tcpdata2.show_data)
         self.comp.data_received.connect(self.comp.show_diff)

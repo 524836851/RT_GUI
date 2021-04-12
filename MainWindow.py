@@ -5,6 +5,7 @@ import queue
 import socket as sk
 import time
 import threading
+import json
 from multiprocessing import Process
 import subprocess as sub
 import sys
@@ -22,6 +23,7 @@ from ChartView import ChartView
 from TcpDecode import compare,TCP_Data
 from WebMain import app,app_add
 from Log import LogWidget
+from Config import app_conf
 
 
 class MyMain(QMainWindow):
@@ -29,6 +31,8 @@ class MyMain(QMainWindow):
     def __init__(self):
         super().__init__()
         self.init_UI()
+        self.conf = app_conf(self.ui)
+        self.conf.set_ui_conf()
         self.set_connect()
         #self.start_web()
        
@@ -69,6 +73,7 @@ class MyMain(QMainWindow):
 
        
     def closeEvent(self,e):
+        self.conf.write_conf()
         self.tcpdata1.close_data()
         self.tcpdata2.close_data()
         self.tcpdata1.write_temp.close()
@@ -111,8 +116,7 @@ class MyMain(QMainWindow):
         self.tcpdata2 = TCP_Data(self.ui,[self.ui.lineEdit_6,self.ui.lineEdit_5,self.ui.textBrowser_2,self.ui.pushButton_5,self.ui.pushButton_3],partial(self.comp.add_data,1),partial(app_add,1),show_otherinfo=True)
         self.ui.lineEdit_select.setText(os.getcwd()+"/log")
         self.set_write_temp()
-        #self.tcpdata1.set_write_temp(self.ui.lineEdit_base.text())
-        #self.tcpdata2.set_write_temp(self.ui.lineEdit_rover.text())
+
         self.ui.pushButton.clicked.connect(self.tcpdata1.start_connect)
         self.ui.pushButton.clicked.connect(self.streambase_change)
         self.ui.pushButton_4.clicked.connect(self.tcpdata1.close_data)

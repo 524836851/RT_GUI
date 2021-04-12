@@ -50,8 +50,8 @@ class ChartView(QChartView,QChart):
         cur_time = QDateTime().fromSecsSinceEpoch(cur_t.timestamp())
         self.series_list[k].append(cur_time.toMSecsSinceEpoch(),value)
 
-        if self.series_list[k].count() > 3600:
-            self.series_list[k].removePoints(0,self.series_list[k].count()-3600)
+        if self.series_list[k].count() > 2700:
+            self.series_list[k].removePoints(0,self.series_list[k].count()-2700)
         min_time = QDateTime().fromMSecsSinceEpoch(self.series_list[k].at(0).x())
         max_time = cur_time.addSecs(10)
         self.x_Aix.setMin(min_time)

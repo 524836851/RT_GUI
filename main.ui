@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>942</width>
-    <height>720</height>
+    <width>731</width>
+    <height>609</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -451,7 +451,7 @@
             <widget class="QTextBrowser" name="textBrowser_3">
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>8</pointsize>
               </font>
              </property>
             </widget>
@@ -460,7 +460,7 @@
             <widget class="QTextBrowser" name="textBrowser_2">
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>8</pointsize>
               </font>
              </property>
             </widget>
@@ -497,7 +497,7 @@
             <widget class="QTextBrowser" name="textBrowser">
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>8</pointsize>
               </font>
              </property>
             </widget>
@@ -892,7 +892,7 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>500</height>
+        <height>200</height>
        </size>
       </property>
      </widget>

@@ -13,17 +13,39 @@ from functools import partial
 from utils import get_diff_data,blh2xyz,xyz2blh,get_diff
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QMainWindow,QFileDialog
+from PyQt5.QtWidgets import QMainWindow,QFileDialog,QDialog
 from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl,QMargins
 from PyQt5.QtCore import QDateTime,Qt,QTimer
 from PyQt5.QtChart import QChart,QChartView,QValueAxis,QLineSeries,QScatterSeries
 #from PyQt5.QtWebEngineWidgets import QWebEngineView
-import Ui_main
+import Ui_main,Ui_close
 from ChartView import ChartView
 from TcpDecode import compare,TCP_Data
 from WebMain import app,app_add
 from Log import LogWidget
 from Config import app_conf
+
+class CloseView(QDialog):
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.ui = Ui_close.Ui_Dialog()
+        self.ui.setupUi(self)
+
+    def set_parent_e(self,e):
+        self.e = e
+        self.ignore = True
+
+    def close_not_ignore(self):
+        self.ignore = False
+        self.close()
+        
+    def closeEvent(self,e):
+        if self.ignore:
+            self.e.ignore()
+        super().closeEvent(e)
+        
+
 
 
 class MyMain(QMainWindow):
@@ -71,16 +93,25 @@ class MyMain(QMainWindow):
         self.gridLayout_chart.setVerticalSpacing(0)
         self.ui.charView[name].set_button(button,checkbox)
 
-       
-    def closeEvent(self,e):
-        self.conf.write_conf()
+    def close_all(self,e,save):
+        if save:
+            self.conf.write_conf()
         self.tcpdata1.close_data()
         self.tcpdata2.close_data()
         self.tcpdata1.write_temp.close()
         self.tcpdata2.write_temp.close()
         self.comp.write_temp.close()
-        #self.app_run.kill()
-        self.close()
+        super().closeEvent(e)
+      
+    def closeEvent(self,e):
+        close_view = CloseView()
+        close_view.set_parent_e(e)
+        close_view.ui.pushButton.clicked.connect(close_view.close_not_ignore)
+        close_view.ui.pushButton.clicked.connect(partial(self.close_all,e,True))
+        close_view.ui.pushButton_2.clicked.connect(close_view.close_not_ignore)
+        close_view.ui.pushButton_2.clicked.connect(partial(self.close_all,e,False))
+        close_view.ui.pushButton_3.clicked.connect(close_view.close)
+        close_view.exec()
 
     def streambase_change(self):
         if self.ui.tabWidget_2.currentIndex() == 0:
@@ -109,12 +140,12 @@ class MyMain(QMainWindow):
             return
         self.ui.lineEdit_select.setText(dir_choose)
         self.ui.logView.write_data(f"Set Save Diretory: {dir_choose}")
+    
 
     def set_connect(self):
         self.comp = compare(self.ui,self.ui.textBrowser_3,self.ui.charView)
         self.tcpdata1 = TCP_Data(self.ui,[self.ui.lineEdit,self.ui.lineEdit_2,self.ui.textBrowser,self.ui.pushButton_4,self.ui.pushButton],partial(self.comp.add_data,0),partial(app_add,0))
         self.tcpdata2 = TCP_Data(self.ui,[self.ui.lineEdit_6,self.ui.lineEdit_5,self.ui.textBrowser_2,self.ui.pushButton_5,self.ui.pushButton_3],partial(self.comp.add_data,1),partial(app_add,1),show_otherinfo=True)
-        self.ui.lineEdit_select.setText(os.getcwd()+"/log")
         self.set_write_temp()
 
         self.ui.pushButton.clicked.connect(self.tcpdata1.start_connect)

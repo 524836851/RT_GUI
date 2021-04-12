@@ -179,4 +179,6 @@ class TCP_Data(QObject):
             self.ui.logView.write_data(str(e))
         self.ui_list[3].setDisabled(True)
         self.ui_list[4].setDisabled(False)
-        self.ui.logView.write_data(f"Stop Socket: {self.ip} {self.port}")
+        self.ui.logView.write_data(f"Stop Socket")
+        #TODO: how to show ip port
+        #self.ui.logView.write_data(f"Stop Socket: {self.ip} {self.port}")

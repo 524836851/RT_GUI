@@ -15,7 +15,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QMainWindow,QFileDialog,QDialog
 from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl,QMargins
-from PyQt5.QtCore import QDateTime,Qt,QTimer
+from PyQt5.QtCore import QDateTime,Qt
 from PyQt5.QtChart import QChart,QChartView,QValueAxis,QLineSeries,QScatterSeries
 #from PyQt5.QtWebEngineWidgets import QWebEngineView
 import Ui_main,Ui_close

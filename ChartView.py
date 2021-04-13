@@ -23,7 +23,6 @@ class ChartView(QChartView,QChart):
         self.setRenderHint(QPainter.Antialiasing)  # 抗锯齿
         self.q_point={}
         self.chart_init(s_key)
-        #self.timer_init()
 
     def set_button(self,comboBox,checkbox):
         self.comboBox= comboBox
@@ -82,7 +81,7 @@ class ChartView(QChartView,QChart):
         for k,c in zip(self.s_key,color_list):
             self.q_point[k] = queue.Queue()
             self.series_list[k] = QScatterSeries()
-            self.series_list[k].setMarkerSize(9.0)
+            self.series_list[k].setMarkerSize(7.0)
             self.series_list[k].setColor(QColor(c))
             self.series_list[k].setPen(QPen(QtCore.Qt.PenStyle.NoPen))
             self.chart.addSeries(self.series_list[k])

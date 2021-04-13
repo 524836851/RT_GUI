@@ -27,6 +27,9 @@ class compare(QObject):
         self.Q = [queue.Queue(),queue.Queue()]
         self.Q_now=[None,None]
         self.static = False;
+        self.data_temp = []
+
+        self.data_received.connect(self.show_diff)
     
     def set_write_temp(self):
         now_t=datetime.datetime.utcnow()
@@ -34,8 +37,19 @@ class compare(QObject):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         name = self.ui.lineEdit_compare.text()
-        tempfile_name = f"{save_dir}/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}_{now_t.minute}.log"
-        self.write_temp = open(tempfile_name,"w")
+        self.tempfile_name = f"{save_dir}/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}.log"
+
+    def write_temp(self,txt):
+        self.data_temp.append(txt+"\n")
+        if len(self.data_temp) > 2000:
+            self.flush_temp()
+                
+    def flush_temp(self):
+        if self.data_temp:
+            with open(self.tempfile_name,"a") as myfile:
+                myfile.writelines(self.data_temp)
+            self.data_temp.clear()
+
 
     def set_static(self,b):
         self.static = b
@@ -76,7 +90,7 @@ class compare(QObject):
         # add textBrowswer
         str_diffdata = f"{diff_data['UTC']} E:{diff_data['E']:.2f} N:{diff_data['N']:.2f} U:{diff_data['U']:.2f}"
         self.textBrowser.append(str_diffdata)
-        self.write_temp.write(str_diffdata+"\n")
+        self.write_temp(str_diffdata)
 
         self.Q_now[0] = None
         self.Q_now[1] = None
@@ -84,7 +98,7 @@ class compare(QObject):
 class TCP_Data(QObject):
 
     data_received = pyqtSignal()
-
+    data_close =pyqtSignal()
     def __init__(self,ui,ui_list,compare_add,app_add,show_otherinfo=False):
         super().__init__()
         self.ui = ui
@@ -95,15 +109,32 @@ class TCP_Data(QObject):
         self.show_otherinfo =show_otherinfo
         self.sock = sk.socket(sk.AF_INET,sk.SOCK_STREAM)
         self.static = False
+        self.get_data_flag = False
+        self.data_temp = []
+        
+        self.data_close.connect(self.__close_event)
+        self.data_received.connect(self.show_data)
+        self.ui_list[3].clicked.connect(self.close_data)
+        self.ui_list[4].clicked.connect(self.start_connect)
 
     def set_write_temp(self,name,dir_name="./log"):
-        self.close_data()
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
         now_t = datetime.datetime.utcnow()
-        tempflie_name = f"{dir_name}/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}_{now_t.minute}.log"
-        self.write_temp = open(tempflie_name,"w")
-        
+        self.tempfile_name= f"{dir_name}/{name}_{now_t.year}_{now_t.month}_{now_t.day}_{now_t.hour}.log"
+        #self.write_temp = open(tempflie_name,"w")
+
+    def write_temp(self,txt):
+        self.data_temp.append(txt+"\n")
+        if len(self.data_temp) > 2000:
+            self.flush_temp()
+
+    def flush_temp(self):
+        if self.data_temp:
+            with open(self.tempfile_name,"a") as myfile:
+                myfile.writelines(self.data_temp)
+            self.data_temp.clear()
+       
     def start_connect(self):
         sender = self.sender()
         self.ip = self.ui_list[0].text()
@@ -124,6 +155,7 @@ class TCP_Data(QObject):
         sender.setDisabled(True)
         self.ui_list[3].setDisabled(False)
         self.get_thread = threading.Thread(target=self.get_data)
+        self.get_data_flag = True
         self.get_thread.start()
 
     def show_data(self):
@@ -143,7 +175,7 @@ class TCP_Data(QObject):
             str_data+=" ".join(data[7:])
             
         self.ui_list[2].append(str_data)
-        self.write_temp.write(str_data+"\n")
+        self.write_temp(str_data)
         if self.show_otherinfo:
             self.ui.charView["SatNum"].add_data("SatNum",(sow,satNum))
             self.ui.charView["PDOP"].add_data("PDOP",(sow,pdop))
@@ -151,7 +183,8 @@ class TCP_Data(QObject):
 
     def get_data(self):
         if not self.static:
-            while True:
+            self.sock.settimeout(1)
+            while self.get_data_flag:
                 try:
                     data = self.sock.recv(2048).decode()
                     self.q_result.put(data)
@@ -164,21 +197,31 @@ class TCP_Data(QObject):
                     b,l,h=xyz2blh(float(data[1]),float(data[2]),float(data[3]))  
                     self.compare_add([sow,xyz,mode])
                     self.app_add([sow,xyz])
+                except sk.timeout as e:
+                    continue
                 except ConnectionError as e:
-                    self.ui.logView.write_data(str(e))
+                    self.ui.logView.write_data("Connection Error: "+str(e))
+                    self.data_close.emit()
                     break
                 except OSError as e:
-                    self.ui.logView.write_data(str(e))
+                    self.ui.logView.write_data("OS Error: "+ str(e))
+                    self.data_close.emit()
                     break
-            self.close_data()
+            self.data_close.emit()
+    
+    def close_data(self,wait=False):
+        if wait and self.get_data_flag:
+            self.get_thread.join() 
+        self.get_data_flag = False
+        self.ui_list[3].setDisabled(True)
 
-    def close_data(self):
+    def __close_event(self):
         try:
             self.sock.close()
         except Exception as e:
             self.ui.logView.write_data(str(e))
+        #self.get_thread.join()
         self.ui_list[3].setDisabled(True)
         self.ui_list[4].setDisabled(False)
-        self.ui.logView.write_data(f"Stop Socket")
-        #TODO: how to show ip port
-        #self.ui.logView.write_data(f"Stop Socket: {self.ip} {self.port}")
+        self.ui.logView.write_data(f"Stop Socket: {self.ip} {self.port}")
+        self.flush_temp()

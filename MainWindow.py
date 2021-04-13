@@ -6,7 +6,7 @@ import socket as sk
 import time
 import threading
 import json
-from multiprocessing import Process
+from multiprocessing import Process,Queue
 import subprocess as sub
 import sys
 from functools import partial
@@ -17,13 +17,18 @@ from PyQt5.QtWidgets import QMainWindow,QFileDialog,QDialog
 from PyQt5.QtCore import QObject,pyqtSignal,QPointF,QUrl,QMargins
 from PyQt5.QtCore import QDateTime,Qt
 from PyQt5.QtChart import QChart,QChartView,QValueAxis,QLineSeries,QScatterSeries
-#from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 import Ui_main,Ui_close
 from ChartView import ChartView
 from TcpDecode import compare,TCP_Data
-from WebMain import app,app_add
+from WebMain import web_main
 from Log import LogWidget
 from Config import app_conf
+
+Q_list=[Queue(),Queue()]
+
+def app_add(idx,data):
+    Q_list[idx].put(data)
 
 class CloseView(QDialog):
 
@@ -56,13 +61,25 @@ class MyMain(QMainWindow):
         self.conf = app_conf(self.ui)
         self.conf.set_ui_conf()
         self.set_connect()
-        #self.start_web()
+        self.start_web()
        
     def start_web(self):
         self.ui.logView.write_data("Web Server Start...")
         web_log = open("web.log","w")
-        self.app_run = threading.Thread(target=app.run)
-        self.app_run.start()
+        self.web_run= Process(target=web_main,args=(Q_list,))
+        self.web_run.start()
+        # Web View
+        self.gridLayout_web = QtWidgets.QGridLayout(self.ui.widget_map)
+        self.gridLayout_web.setObjectName("gridLayout_web")
+        self.ui.webView = QWebEngineView(self.ui.widget_map)
+        self.ui.web_refresh_button = QtWidgets.QPushButton(self.ui.widget_map)
+        self.ui.web_refresh_button.setText("Refresh")
+        self.gridLayout_web.addWidget(self.ui.web_refresh_button,0,0,1,1)
+        self.gridLayout_web.addWidget(self.ui.webView,1,0,1,1)
+        self.gridLayout_web.setContentsMargins(QMargins(0,0,0,0))
+        self.ui.webView.setUrl(QUrl('http://127.0.0.1:5000/'))
+        self.ui.web_refresh_button.clicked.connect(self.ui.webView.reload)
+
 
     def init_UI(self):
         self.ui = Ui_main.Ui_MainWindow()
@@ -72,14 +89,6 @@ class MyMain(QMainWindow):
         self.add_Chart("SatNum",self.ui.widget_6,["SatNum"],self.ui.comboBox_3,self.ui.checkBox_2)
         self.add_Chart("PDOP",self.ui.widget_7,["PDOP"],self.ui.comboBox,self.ui.checkBox_3)
         self.add_Chart("Ratio",self.ui.widget_8,["Ratio"],self.ui.comboBox_4,self.ui.checkBox_4)
-        # Web View
-        #self.gridLayout_web = QtWidgets.QGridLayout(self.ui.widget_map)
-        #self.gridLayout_web.setObjectName("gridLayout_web")
-        #self.ui.webView = QWebEngineView(self.ui.widget_map)
-        #self.gridLayout_web.addWidget(self.ui.webView,0,0,1,1)
-        #self.gridLayout_web.setContentsMargins(QMargins(0,0,0,0))
-        #self.ui.webView.setUrl(QUrl('http://127.0.0.1:5000/'))
-
         # Log View
         self.ui.logView = LogWidget(self.ui.centralwidget)
         self.ui.gridLayout_3.addWidget(self.ui.logView, 1, 0, 1, 1)
@@ -98,9 +107,8 @@ class MyMain(QMainWindow):
             self.conf.write_conf()
         self.tcpdata1.close_data()
         self.tcpdata2.close_data()
-        self.tcpdata1.write_temp.close()
-        self.tcpdata2.write_temp.close()
-        self.comp.write_temp.close()
+        self.comp.flush_temp()
+        self.web_run.kill()
         super().closeEvent(e)
       
     def closeEvent(self,e):
@@ -148,15 +156,15 @@ class MyMain(QMainWindow):
         self.tcpdata2 = TCP_Data(self.ui,[self.ui.lineEdit_6,self.ui.lineEdit_5,self.ui.textBrowser_2,self.ui.pushButton_5,self.ui.pushButton_3],partial(self.comp.add_data,1),partial(app_add,1),show_otherinfo=True)
         self.set_write_temp()
 
-        self.ui.pushButton.clicked.connect(self.tcpdata1.start_connect)
         self.ui.pushButton.clicked.connect(self.streambase_change)
-        self.ui.pushButton_4.clicked.connect(self.tcpdata1.close_data)
-        self.ui.pushButton_3.clicked.connect(self.tcpdata2.start_connect)
-        self.ui.pushButton_5.clicked.connect(self.tcpdata2.close_data)
         self.ui.pushButton_static.clicked.connect(self.streambase_change)
         self.ui.pushButton_6.clicked.connect(self.set_write_temp)
         self.ui.pushButton_select.clicked.connect(self.btn_choose_dir)
-        self.tcpdata1.data_received.connect(self.tcpdata1.show_data)
-        self.tcpdata2.data_received.connect(self.tcpdata2.show_data)
-        self.comp.data_received.connect(self.comp.show_diff)
+        #self.ui.pushButton.clicked.connect(self.tcpdata1.start_connect)
+        #self.ui.pushButton_4.clicked.connect(self.tcpdata1.close_data)
+        #self.ui.pushButton_3.clicked.connect(self.tcpdata2.start_connect)
+        #self.ui.pushButton_5.clicked.connect(self.tcpdata2.close_data)
+        #self.tcpdata1.data_received.connect(self.tcpdata1.show_data)
+        #self.tcpdata2.data_received.connect(self.tcpdata2.show_data)
+        #self.comp.data_received.connect(self.comp.show_diff)
         
